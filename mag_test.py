@@ -78,7 +78,7 @@ sig_list       = args.s.split(',')
 
 for c in set_args_list:
 	if check_corpus_existance(c) == False:
-		print("Error: corpus {} does NOT exists")
+		print("Error: corpus {} does NOT exists".format(c))
 		exit(100)
 
 for c in set_args_list:
