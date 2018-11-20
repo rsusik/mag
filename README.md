@@ -46,7 +46,9 @@ Example:
 
 
 To make the testing with multiple parameters easier the `mag_test.py` script can be used. 
+
 **Note:** Please note that you can replace *pattern_loc*, *set_loc* and *alg_loc* variables in the file.
+
 **Note:** The script will download any from Pizza&Chilli Corpus from english, proteins, sources, xml.dblp, dna of size 50MB, 100MB and 200MB.
 
 Following parameters are supported by `mag_test.py`:
