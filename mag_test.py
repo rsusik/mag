@@ -1,98 +1,114 @@
-import subprocess, sys, os, platform
+import subprocess, sys, os, platform, argparse, gzip, shutil
+from urllib.request import urlopen
 
-pattern_loc = './patterns' # each folder should have name with suffix .r1000 where 1000 is number of patterns
-set_loc = './sets'
+# example: python3 mag_test.py -a mag -c sources.50MB -r 10,100,1000 -m 8,32 -q 2 -s 5 -u 4 -k 2
+
+pattern_loc = './' # each folder should start with patterns and have a name with suffix .r1000 where 1000 is number of patterns
+set_loc = './sets/'
 alg_loc = './'
 
-args_num = len(sys.argv) - 1
 curr_path = os.getcwd()
 
-arg_offset = 0
+pizza_corpus = {
+	'proteins.50MB': 'http://pizzachili.dcc.uchile.cl/texts/protein/proteins.50MB.gz',
+	'proteins.100MB': 'http://pizzachili.dcc.uchile.cl/texts/protein/proteins.100MB.gz',
+	'proteins.200MB': 'http://pizzachili.dcc.uchile.cl/texts/protein/proteins.200MB.gz',
+	'sources.50MB': 'http://pizzachili.dcc.uchile.cl/texts/code/sources.50MB.gz',
+	'sources.100MB': 'http://pizzachili.dcc.uchile.cl/texts/code/sources.100MB.gz',
+	'sources.200MB': 'http://pizzachili.dcc.uchile.cl/texts/code/sources.200MB.gz',
+	'dna.50MB': 'http://pizzachili.dcc.uchile.cl/texts/dna/dna.50MB.gz',
+	'dna.100MB': 'http://pizzachili.dcc.uchile.cl/texts/dna/dna.100MB.gz',
+	'dna.200MB': 'http://pizzachili.dcc.uchile.cl/texts/dna/dna.200MB.gz',
+	'english.50MB': 'http://pizzachili.dcc.uchile.cl/texts/nlang/english.50MB.gz',
+	'english.100MB': 'http://pizzachili.dcc.uchile.cl/texts/nlang/english.100MB.gz',
+	'english.200MB': 'http://pizzachili.dcc.uchile.cl/texts/nlang/english.200MB.gz',
+	'english.1024MB':'http://pizzachili.dcc.uchile.cl/texts/nlang/english.1024MB.gz',
+	'xml.50MB': 'http://pizzachili.dcc.uchile.cl/texts/xml/dblp.xml.50MB.gz',
+	'xml.100MB': 'http://pizzachili.dcc.uchile.cl/texts/xml/dblp.xml.100MB.gz',
+	'xml.200MB': 'http://pizzachili.dcc.uchile.cl/texts/xml/dblp.xml.200MB.gz',
+}
 
-# Error
-if args_num < 1:
-    print >> sys.stderr, "Error not enought parameters. See --help."
-    exit()
+def check_patterns_existance(corpus, r, m):
+	filename = "{}patterns.r{}/patterns.{}.{}.bin".format(pattern_loc, r, corpus, m)
+	if os.path.isfile(filename):
+		return True
+	os.system("python3 generate_patterns.py -c {} -r {} -m {}".format(corpus, r, m))
+	
 
-if sys.argv[1]=='--help':
-	print 'Pattern matching tester help.'
-	print ''
-	print 'Syntax:'
-	print 'test [--help] algorithm[.exe] test_set r m u k q-size sigma'
-	print ''
-	print '--help      Shows the help'
-	print 'algorithm   Algorithm(eg. cf,fso)'
-	print 'test_set    Test set(eg. english.100MB)'
-	print 'r           Pattern number(eg. 1000)'
-	print 'm           Pattern length(eg. 8)'
-	print 'u           U parameter(eg. 8)'
-	print 'k           K parameter(eg. 2)'
-	print 'q           q-gram size'
-	print 'sig         sigma'
-	print ''
-	print 'Example:'
-	print 'mag_test.py mag english.200MB 100,1000 8,16,32,64 8 1,2 2,3,4,6,8 5'
-	print ''
-	exit()
+def check_corpus_existance(corpus):
+	filename = set_loc + corpus
+	if os.path.isfile(filename):
+		return True
+	if corpus not in pizza_corpus:
+		return False
+	print("Warning: Corpus does NOT exists. Trying to download (it may take a while).")
+	url = pizza_corpus[corpus]
+	with urlopen(url) as ret:
+		if ret.code != 200:
+			return False
+	with urlopen(url) as response, open(filename, 'wb') as out_file:
+		shutil.copyfileobj(response, out_file)
+		if os.path.isfile(filename):
+			return True
+	return False
 
-# Error
-if args_num < 7:
-    print >> sys.stderr, "Error not enought parameters. See --help."
-    exit()
+parser = argparse.ArgumentParser(description='MAG testing script.', 
+	epilog="Example:\npython3 mag_test.py -a mag -c english.10MB -r 100 -m 8,32 -q 2 -s 5 -u 4 -k 2")
+parser.add_argument("-r", "--npatterns", dest='r', type=str, default='100', help="number of patterns")
+parser.add_argument("-a", "--algorithm", dest='a', type=str, default='mag_l2', help="algorithm[s] to be tested")
+parser.add_argument("-c", "--corpus", dest='c', type=str, default='english.10MB', help="corpus")
+parser.add_argument("-m", "--length", dest='m', type=str, default='8,16,32,64', help="pattern length[s] (e.g. 8,16,32)")
+parser.add_argument("-u", "--faosou", dest='u', type=str, default='4', help="FAOSO parameter U")
+parser.add_argument("-k", "--faosok", dest='k', type=str, default='2', help="FAOSO parameter k")
+parser.add_argument("-q", "--q-gram", dest='q', type=str, default='2', help="q-gram size")
+parser.add_argument("-s", "--sigma", dest='s', type=str, default='4', help="dest. alph. size")
 
-# algorithm
-algs      = sys.argv[1] # algorithms
-# arguments:
-set_args  = sys.argv[2] # sets
-r_args    = sys.argv[3] # number of patterns
-m_args    = sys.argv[4] # pattern length
-u_args    = sys.argv[5] # U
-k_args    = sys.argv[6] # K
-q_args    = sys.argv[7] # Q
-sig_args  = sys.argv[8] # Sigma
-
-set_args_list  = set_args.split(',')
-a_args_list    = algs.split(',')
-r_args_list    = r_args.split(',')
-m_args_list    = m_args.split(',')
-u_args_list    = u_args.split(',')
-k_args_list    = k_args.split(',')
-q_list         = q_args.split(',')
-sig_list       = sig_args.split(',')
-
-print 'Starting calculation for following parameters'
-print 'Sets      : ' + set_args
-print 'M         : ' + m_args
-print 'U         : ' + u_args
-print 'K         : ' + k_args
-print 'Q-Size    : ' + q_args
-print 'Sigma     : ' + sig_args
+args = parser.parse_args()
 
 
-print 'A\t' + 'S\t' + 'R\t' + 'Q\t' + 'M\t' + 'U\t' + 'K\t' + 'Sig\t' + 'Sig^Q\t' + 'PattSize\t' + 'n\t' + 'ver\t' + 'whloops\t' + 'matches\t' + 'acc\t' + 'pre_t\t' + 'search_t\t' + 'full_t\t' + 'search[MB/s]\t' + 'full[MB/s]'
+set_args_list  = args.c.split(',')
+a_args_list    = args.a.split(',')
+r_args_list    = args.r.split(',')
+m_args_list    = args.m.split(',')
+u_args_list    = args.u.split(',')
+k_args_list    = args.k.split(',')
+q_list         = args.q.split(',')
+sig_list       = args.s.split(',')
+
+for c in set_args_list:
+	if check_corpus_existance(c) == False:
+		print("Error: corpus {} does NOT exists")
+		exit(100)
+
+for c in set_args_list:
+	for r in r_args_list:
+		for m in m_args_list:
+			check_patterns_existance(c, r, m)
+
+print("a\tc\tr\tq\tm\tU\tk\ts\ts^2\tps\tn\tv\twh\tmatches\tacc\tpre_t\tsearch_t\tfull_t\tsearch[MB/s]\tfull[MB/s]")
 for a in a_args_list:
 	for sig in sig_list:
 		for q in q_list:
-			for s in set_args_list:
+			for c in set_args_list:
 				for r in r_args_list:
 					for m in m_args_list:
 						for u in u_args_list:
 							for k in k_args_list:
-								proc_filename    = alg_loc + '/' + a 
-								pattern_filename = pattern_loc + '.r' + r + '/patterns.' + s + '.' + m + '.bin'
-								set_filename     = set_loc + '/' + s
+								proc_filename    = "{}/{}".format(alg_loc, a)
+								pattern_filename = "{}patterns.r{}/patterns.{}.{}.bin".format(pattern_loc, r, c, m)
+								corpus_filename     = "{}/{}".format(set_loc, c)
 								if not os.path.isfile(proc_filename):
-									print "Error: The prog file not found ( "+proc_filename+")"
+									print("Error: The prog file not found ({})".format(proc_filename))
 									exit()
 								if not os.path.isfile(pattern_filename):
-									print "Error: The pattern file not found ( "+pattern_filename+")"
+									print("Error: The pattern file not found ({})".format(pattern_filename))
 									exit()
-								if not os.path.isfile(set_filename):
-									print "Error: The set file not found ( "+set_filename+")"
+								if not os.path.isfile(corpus_filename):
+									print("Error: The set file not found ({})".format(corpus_filename))
 									exit()
-								#print proc_filename, pattern_filename, m, set_filename, u, k, q, sig
-								proc = subprocess.Popen([proc_filename, pattern_filename, m, set_filename, u, k, q, sig], stdout=subprocess.PIPE)
+								#print proc_filename, pattern_filename, m, corpus_filename, u, k, q, sig
+								proc = subprocess.Popen([proc_filename, pattern_filename, m, corpus_filename, u, k, q, sig], stdout=subprocess.PIPE)
 								output = proc.stdout.read()
-								output = a + '\t' + s + '\t' + r + '\t' + q + '\t' + m + '\t' + u + '\t' + k + '\t' + output;
+								output = "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}".format(a, c, r, q, m, u, k, output.decode('ascii'))
 								sys.stdout.write(output)
 								sys.stdout.flush()

@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
 		q_size==10 ? sigma * sigma * sigma * sigma * sigma * sigma * sigma * sigma * sigma * sigma : 0;
 
 	size_t RAM = super_sigma * sizeof(plist) + 10000*sizeof(pelem) + 10000*pattern_size + text_size;
-	if(RAM > 2000000000) { printf("Error: There is not enough RAM memory available ( %lld )\n", RAM); exit(EXIT_FAILURE); }
+	if(RAM > 2000000000) { printf("Error: There is not enough RAM memory available ( %zd )\n", RAM); exit(EXIT_FAILURE); }
 	if( super_sigma > 100000000 || super_sigma == 0) { printf("Error: Q is too big for choosen sigma size { q=%d, super_sigma=%d }\n", q_size, super_sigma); exit(EXIT_FAILURE); }
 
 	indexed_patterns = (plist*)calloc(super_sigma, sizeof(plist));

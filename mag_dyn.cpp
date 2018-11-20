@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
 
 	t_start(t_pre);
 
-	if( get_super_sigma(q_size) > 100000000 || get_super_sigma(q_size) == 0) { printf("Error: Q is too big for choosen sigma size { q=%d, super_sigma=%d }\n", q_size, get_super_sigma(q_size)); exit(EXIT_FAILURE); }
+	if( get_super_sigma(q_size) > 100000000 || get_super_sigma(q_size) == 0) { printf("Error: Q is too big for choosen sigma size { q=%d, super_sigma=%zu }\n", q_size, get_super_sigma(q_size)); exit(EXIT_FAILURE); }
 	indexed_patterns = (plist*)calloc(get_super_sigma(q_size), sizeof(plist));
 
 	for(int i = 0; i < get_super_sigma(q_size); ++i) { indexed_patterns[i].list = (pelem*)calloc(1, sizeof(pelem)); }

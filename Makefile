@@ -28,4 +28,4 @@ mag: mag.cpp mag.h common.h
 all: mag_dna_opt_l2 mag_dna_opt_l3 mag_dna_l2 mag_dna_l3 mag_dna_l4 mag_l2 mag_l3 mag_l4 mag
 
 clean:
-	rm -f mag_dna_opt_l2 mag_dna_opt_l3 mag_dna_l2 mag_dna_l3 mag_dna_l4 mag_l2 mag_l3 mag_l4 *.exe *.pdb
+	rm -f mag_dna_opt_l2 mag_dna_opt_l3 mag_dna_l2 mag_dna_l3 mag_dna_l4 mag_l2 mag_l3 mag_l4 mag *.exe *.pdb

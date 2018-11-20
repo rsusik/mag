@@ -41,12 +41,26 @@ Example:
 ## Testing
 
 ### Scripts
-* `generatePatterns.py` - generate patterns (see Testing section)
+* `generate_patterns.py` - generate patterns (see Testing section)
 * `mag_test.py` - tests the algorithms (see Testing section)
 
-To make the testing with multiple parameters easier the `mag_test.py` script can be used. 
 
-**Note:** Please replace *pattern_loc*, *set_loc* and *alg_loc* variables in the file.
+To make the testing with multiple parameters easier the `mag_test.py` script can be used. 
+**Note:** Please note that you can replace *pattern_loc*, *set_loc* and *alg_loc* variables in the file.
+**Note:** The script will download any from Pizza&Chilli Corpus from english, proteins, sources, xml.dblp, dna of size 50MB, 100MB and 200MB.
+
+Following parameters are supported by `mag_test.py`:
+```
+  -h, --help           show this help message and exit
+  -r R, --npatterns R  number of patterns
+  -a A, --algorithm A  algorithm[s] to be tested
+  -c C, --corpus C     corpus
+  -m M, --length M     pattern length[s] (e.g. 8,16,32)
+  -u U, --faosou U     FAOSO parameter U
+  -k K, --faosok K     FAOSO parameter k
+  -q Q, --q-gram Q     q-gram size
+  -s S, --sigma S      dest. alph. size
+```
 
 To execute test for:
 - english.10MB dataset,
@@ -60,18 +74,18 @@ To execute test for:
 the following command needs to be run:
 
 ```shell
-python mag_test.py mag english.10MB 100 8,16,32,64 8 1,2 2,3,4,6,8 5
+python3 mag_test.py -a mag -c english.10MB -r 100 -m 8,16,32,64 -u 8 -k 1,2 -q 2,3,4,6,8 -s 5
 ```
 
 **Note:** If the set of parameters is incorrect (e.g. *q > m*) the errors will produced in output (which can be ignored).
 
 **Generate patterns**
 
-To generate patterns the script `generatePatterns.py` may be used. 
+To generate patterns the script `generate_patterns.py` may be used. 
 
 Example:
 ```shell
-$ python generatePatterns.py english.10MB 100 8,16,32,64
+$ python generate_patterns.py english.10MB 100 8,16,32,64
 Patterns generated to file ./patterns.r100/patterns.english.10MB.8.bin
 Patterns generated to file ./patterns.r100/patterns.english.10MB.16.bin
 Patterns generated to file ./patterns.r100/patterns.english.10MB.32.bin
@@ -86,6 +100,17 @@ The above command generates 100 patterns of length *m*={8, 16, 32, 64}.
 * MAGA         - MAG for Approximate pattern matching [Sus2017]
 * MAGC         - MAG for Circullar pattern matching
 * MAG for ETDC - the same algorithm but runs on ETDC
+
+## Citing MAG
+	@inproceedings {SGF14, 
+	author    = {R. Susik and {Sz.} Grabowski and K. Fredriksson},
+	title     = {Multiple Pattern Matching Revisited},
+	booktitle = proct#" Prague Stringology Conference",
+	year      = {2014},
+	pages     = {59--70},
+	COM_address   = {Czech Technical University in Prague, Czech Republic}
+	}
+
 
 ## References
 [FG09] K. Fredriksson, S. Grabowski.
