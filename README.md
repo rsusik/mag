@@ -96,6 +96,46 @@ The above command generates 100 patterns of length *m*={8, 16, 32, 64}.
 
 **Note:** Please make sure the folders *patterns.r[r]* (where [r] is the number of patterns) exists (e.g. ./patterns.r100).
 
+## Docker 
+The simplest way you can test the algorithm is by using `docker`. 
+All you need to do is to:
+1. build the docker image
+2. and run the docker container
+
+Before start please clone the git repository:
+```
+git clone https://github.com/rsusik/mag mag
+cd mag
+```
+
+Then (assuming you have docker installed) build the image:
+```
+docker build -t mag .
+```
+
+And run the image:
+```
+docker run mag
+```
+
+This will execute test with default parameters and output the results.
+
+Additionally you may provide all the parameters mentioned in section [Testing](#testing) as follows:
+```
+docker run --rm mag -a mag -c english.100MB -r 10 -m 8,16,32,64 -u 8 -k 1,2 -q 2,3,4,6,8 -s 5
+```
+
+Above command support only a mentioned Pizza&Chilli corpuses but you may provide your own 
+datasets using -v parameter. Assuming you want to execute test for dataset `mydataset.5MB`
+that is located in `/home/ok/mysets` you have to execute following command:
+```
+docker run --rm -v /home/ok/mysets:/app/sets mag -a mag -c mydataset.5MB
+```
+
+**Note:** Docker is a great tool but there may be performance impact so it is recomended to 
+test the algorithms natively on the same machine.
+
+
 ## Algorithms based on MAG
 * MAGA         - MAG for Approximate pattern matching [Sus2017]
 * MAGC         - MAG for Circullar pattern matching

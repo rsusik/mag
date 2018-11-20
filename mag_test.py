@@ -42,6 +42,7 @@ def check_corpus_existance(corpus):
 	if corpus not in pizza_corpus:
 		return False
 	print("Warning: Corpus does NOT exists. Trying to download (it may take a while).")
+	sys.stdout.flush()
 	url = pizza_corpus[corpus]
 	with urlopen(url) as ret:
 		if ret.code != 200:
