@@ -127,7 +127,7 @@ Additionally you may provide all the parameters mentioned in section [Testing](#
 docker run --rm mag -a mag -c english.100MB -r 10 -m 8,16,32,64 -u 8 -k 1,2 -q 2,3,4,6,8 -s 5
 ```
 
-Above command support only a mentioned Pizza&Chilli corpuses but you may provide your own 
+Above command supports only a mentioned Pizza&Chilli corpuses but you may provide your own 
 datasets using -v parameter. Assuming you want to execute test for dataset `mydataset.5MB`
 that is located in `/home/ok/mysets` you have to execute following command:
 ```
