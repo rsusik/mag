@@ -149,8 +149,7 @@ test the algorithms natively on the same machine.
 	title     = {Multiple Pattern Matching Revisited},
 	booktitle = proct#" Prague Stringology Conference",
 	year      = {2014},
-	pages     = {59--70},
-	COM_address   = {Czech Technical University in Prague, Czech Republic}
+	pages     = {59--70}
 	}
 
 
