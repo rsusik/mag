@@ -43,13 +43,18 @@ def check_corpus_existance(corpus):
 		return False
 	print("Warning: Corpus does NOT exists. Trying to download (it may take a while).")
 	sys.stdout.flush()
-	url = pizza_corpus[corpus]
+	url = pizza_corpus[c]
 	with urlopen(url) as ret:
 		if ret.code != 200:
 			return False
-	with urlopen(url) as response, open(filename, 'wb') as out_file:
-		shutil.copyfileobj(response, out_file)
+	gz_filename = "{}.gz".format(filename)
+	with urlopen(url) as response, open(gz_filename, 'wb') as gz_file:
+		shutil.copyfileobj(response, gz_file)
+	if os.path.isfile(gz_filename):
+		with gzip.open(gz_filename, 'rb') as gz_file, open(filename, 'wb') as dest_file:
+			dest_file.write(gz_file.read())
 		if os.path.isfile(filename):
+			os.remove(gz_filename)
 			return True
 	return False
 
