@@ -147,7 +147,7 @@ test the algorithms natively on the same machine.
 	@inproceedings {SGF14, 
 	author    = {R. Susik and {Sz.} Grabowski and K. Fredriksson},
 	title     = {Multiple Pattern Matching Revisited},
-	booktitle = proct#" Prague Stringology Conference",
+	booktitle = {Proceedings of the Prague Stringology Conference},
 	year      = {2014},
 	pages     = {59--70}
 	}
