@@ -5,6 +5,8 @@ This source code was written for research purpose (http://www.stringology.org/ev
 ## Requirements
 * C++ compiler compatible 
 * Unix based 64-bit OS (compilation works also in Cygwin)
+* Python 3 (for [testing](#testing))
+* [Docker](#docker) (optionaly)
 
 ## Compilation
 To compile the code run below line commands:
