@@ -3,8 +3,6 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /app
 
-#ENV DEBIAN_FRONTEND noninteractive
-
 RUN apt-get update \
     && apt-get install -y --no-install-recommends apt-utils \
 	&& apt-get -y install python3 \
@@ -17,7 +15,4 @@ COPY . /app
 RUN cd /app && make all
 
 ENTRYPOINT ["python3", "mag_test.py"]
-
-#ENV DEBIAN_FRONTEND teletype
-
 
