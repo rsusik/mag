@@ -103,10 +103,11 @@ The above command generates 100 patterns of length *m*={8, 16, 32, 64}.
 ## Docker 
 The simplest way you can test the algorithm is by using `docker`. 
 All you need to do is to:
-1. build the docker image
+1. build the docker image or pull from repository
 2. and run the docker container
 
-Before start please clone the git repository:
+
+To build the image please clone the git repository:
 ```
 git clone https://github.com/rsusik/mag mag
 cd mag
@@ -115,6 +116,12 @@ cd mag
 Then (assuming you have docker installed) build the image:
 ```
 docker build -t mag .
+```
+
+Or pull from repository:
+```
+docker pull rsusik/mag
+docker tag docker.io/rsusik/mag mag
 ```
 
 And run the image:
