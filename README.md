@@ -51,7 +51,7 @@ To make the testing with multiple parameters easier the `mag_test.py` script can
 
 **Note:** Please note that you can replace *pattern_loc*, *set_loc* and *alg_loc* variables in the file.
 
-**Note:** The script will download any from Pizza&Chilli Corpus from english, proteins, sources, xml.dblp, dna of size 50MB, 100MB and 200MB.
+**Note:** The script (if possible) will automaticaly download datasets from Pizza&Chilli Corpus (english, proteins, sources, xml.dblp, dna of size 50MB, 100MB and 200MB).
 
 Following parameters are supported by `mag_test.py`:
 ```
@@ -81,7 +81,7 @@ the following command needs to be run:
 python3 mag_test.py -a mag -c english.10MB -r 100 -m 8,16,32,64 -u 8 -k 1,2 -q 2,3,4,6,8 -s 5
 ```
 
-**Note:** If the set of parameters is incorrect (e.g. *q > m*) the errors will produced in output (which can be ignored).
+**Note:** If the set of parameters is incorrect (e.g. *q > m*) the errors will be produced in output (which can be ignored).
 
 **Generate patterns**
 
@@ -133,7 +133,7 @@ This will execute test with default parameters and output the results.
 
 Additionally you may provide all the parameters mentioned in section [Testing](#testing) as follows:
 ```
-docker run --rm mag -a mag -c english.100MB -r 10 -m 8,16,32,64 -u 8 -k 1,2 -q 2,3,4,6,8 -s 5
+docker run mag -a mag -c english.100MB -r 10 -m 8,16,32,64 -u 8 -k 1,2 -q 2,3,4,6,8 -s 5
 ```
 
 Above command supports only a mentioned Pizza&Chilli corpuses but you may provide your own 
